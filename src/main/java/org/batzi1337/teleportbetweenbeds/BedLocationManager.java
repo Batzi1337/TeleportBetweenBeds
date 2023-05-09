@@ -49,7 +49,6 @@ public class BedLocationManager {
             }
         } else {
             try {
-                configFile.mkdir();
                 configFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();

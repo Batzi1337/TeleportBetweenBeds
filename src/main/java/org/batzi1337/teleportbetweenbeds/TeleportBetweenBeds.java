@@ -19,7 +19,12 @@ public class TeleportBetweenBeds extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
-        File configFile = new File(getDataFolder(), "bedLocations.json");
+        File dataFolder = getDataFolder();
+        if (!dataFolder.exists()) {
+            dataFolder.mkdir();
+        }
+
+        File configFile = new File(dataFolder, "bedLocations.json");
         bedLocationManager = new BedLocationManager(configFile);
     }
 
