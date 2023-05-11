@@ -10,7 +10,6 @@ public class TeleportBetweenBedsCommand implements CommandExecutor {
     private final BedLocationManager bedLocationManager;
 
     public TeleportBetweenBedsCommand(BedLocationManager bedLocationManager) {
-
         this.bedLocationManager = bedLocationManager;
     }
 
@@ -28,6 +27,4 @@ public class TeleportBetweenBedsCommand implements CommandExecutor {
         }
         return false;
     }
-
-
 }

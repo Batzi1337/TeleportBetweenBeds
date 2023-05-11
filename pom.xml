@@ -6,7 +6,7 @@
 
     <groupId>org.batzi1337</groupId>
     <artifactId>TeleportBetweenBeds</artifactId>
-    <version>ALPHA-0.1.3</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
 
     <properties>

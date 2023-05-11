@@ -1,5 +1,5 @@
 name: TeleportBetweenBedsPlugin
-version: ALPHA-0.1.3
+version: 0.2.0
 api-version: '1.19'
 main: org.batzi1337.teleportbetweenbeds.TeleportBetweenBeds
 author: Marco & Marco

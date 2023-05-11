@@ -14,15 +14,12 @@ import java.util.UUID;
 
 public class BedLocationManager {
     private final FileConfiguration configFile;
-    private HashMap<UUID, List<Location>> bedLocations;
+    private final HashMap<UUID, List<Location>> bedLocations;
 
     public BedLocationManager(FileConfiguration configFile) {
         this.configFile = configFile;
-        bedLocations = (HashMap<UUID, List<Location>>) configFile.get("bedLocations.");
-        if (bedLocations == null) {
-            bedLocations = new HashMap<>();
-        }
-
+//        bedLocations = (HashMap<UUID, List<Location>>) configFile.get("bedLocations.");
+        bedLocations = new HashMap<>();
     }
 
     public List<Location> getBedLocation(Player player) {
@@ -30,7 +27,7 @@ public class BedLocationManager {
     }
 
     public void addBedLocation(UUID playerId, Location location) throws IOException {
-        configFile.set("bedLocations." + playerId, location);
+//        configFile.set("bedLocations." + playerId, location);
         bedLocations.computeIfAbsent(playerId, k -> new ArrayList<>()).add(location);
     }
 
