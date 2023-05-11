@@ -1,58 +1,58 @@
 package org.batzi1337.teleportbetweenbeds;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class BedLocationManager {
-    private final File configFile;
-    private final Gson gson;
-    private Map<UUID, List<Location>> bedLocations;
+    private final FileConfiguration configFile;
+    private HashMap<UUID, List<Location>> bedLocations;
 
-    public BedLocationManager(File configFile) {
-        this.bedLocations = new HashMap<>();
+    public BedLocationManager(FileConfiguration configFile) {
         this.configFile = configFile;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
-        load();
+        bedLocations = (HashMap<UUID, List<Location>>) configFile.get("bedLocations.");
+        if (bedLocations == null) {
+            bedLocations = new HashMap<>();
+        }
+
     }
 
     public List<Location> getBedLocation(Player player) {
         return bedLocations.get(player.getUniqueId());
     }
 
-    public void addBedLocation(UUID playerId, Location location) {
+    public void addBedLocation(UUID playerId, Location location) throws IOException {
+        configFile.set("bedLocations." + playerId, location);
         bedLocations.computeIfAbsent(playerId, k -> new ArrayList<>()).add(location);
-        save();
     }
 
-    private void save() {
-        try (FileWriter writer = new FileWriter(configFile)) {
-            gson.toJson(bedLocations, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public Location findClosestBedLocationForPlayer(Player player) {
+        double closestDist = Double.MAX_VALUE;
+        final Location playerLocation = player.getLocation();
+        Location closestBed = null;
 
-    private void load() {
-        if (configFile.exists()) {
-            try (FileReader reader = new FileReader(configFile)) {
-                bedLocations = gson.fromJson(reader, HashMap.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+        for (Location bedLocation : getBedLocation(player)) {
+            if (bedLocation.getWorld() != player.getWorld()) {
+                continue;
             }
-        } else {
-            try {
-                configFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            final Block bedBlock = bedLocation.getBlock();
+            if (bedBlock.getType() == Material.WHITE_BED) {
+                double dist = bedLocation.distanceSquared(playerLocation);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestBed = bedLocation;
+                }
             }
         }
+
+        return closestBed;
     }
 }
